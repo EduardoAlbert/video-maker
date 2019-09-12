@@ -67,4 +67,9 @@ content.json
 
 content/*.png
 content/*.jpg
+content/*.js
+content/*.avi
+Adobe After Effects Auto-Save
+template.aep Logs
 .DS_Store
+
