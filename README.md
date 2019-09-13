@@ -1,5 +1,5 @@
 # Video Maker
-Projeto open source para fazer vídeos automatizados. Inspirado por filipedeschamps.
+Projeto open source para fazer vídeos automatizados. Inspirado por [Filipe Deschamps](https://github.com/filipedeschamps).
 
 # Pré requisitos
 
