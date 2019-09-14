@@ -8,11 +8,12 @@ async function robot() {
   console.log('> [video-robot] Starting...')
   const content = state.load();
 
-  await convertAllImages(content);  
-  await createAllSentenceImages(content);
-  await createYouTubeThumbnail();
-  await createAfterEffectsScript(content);
-  await renderVideoWithAfterEffects();
+  //await convertAllImages(content);  
+  //await createAllSentenceImages(content);
+  //await createYouTubeThumbnail();
+  //await createAfterEffectsScript(content);
+  //await renderVideoWithAfterEffects();
+  await renderVideoWithKdenlive();
 
   state.save(content);
 
@@ -159,6 +160,27 @@ async function robot() {
 
       aerender.on('close', () => {
         console.log('> [video-robot] After Effects closed')
+        resolve()
+      })
+    })
+  }
+
+  async function renderVideoWithKdenlive() {
+    return new Promise((resolve, reject) => {
+      const meltFilePath = 'C:/Users/Administrador/AppData/Local/kdenlive/bin/melt.exe';
+      const templateFilePath = `${rootPath}/templates/2/template.mlt`;
+
+      console.log('> [video-robot] Starting Kdenlive');
+
+      const melt = spawn(meltFilePath, [
+        templateFilePath])
+
+      melt.stdout.on('data', (data) => {
+        process.stdout.write(data)
+      })
+
+      melt.on('close', () => {
+        console.log('> [video-robot] Kdenlive closed')
         resolve()
       })
     })
