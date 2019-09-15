@@ -8,12 +8,16 @@ async function robot() {
   console.log('> [video-robot] Starting...')
   const content = state.load();
 
-  //await convertAllImages(content);  
-  //await createAllSentenceImages(content);
-  //await createYouTubeThumbnail();
-  //await createAfterEffectsScript(content);
-  //await renderVideoWithAfterEffects();
-  await renderVideoWithKdenlive();
+  await convertAllImages(content);  
+  await createAllSentenceImages(content);
+  await createYouTubeThumbnail();
+
+  if (content.renderOption == 'Kdenlive') {
+    await renderVideoWithKdenlive();
+  } else if (content.renderOption == 'After Effects') {
+    await createAfterEffectsScript(content);
+    await renderVideoWithAfterEffects();
+  }
 
   state.save(content);
 
@@ -144,7 +148,7 @@ async function robot() {
     return new Promise((resolve, reject) => {
       const aerenderFilePath = 'C:/Program Files/Adobe/Adobe After Effects CC 2019/Support Files/aerender';
       const templateFilePath = `${rootPath}/templates/1/template.aep`;
-      const destinationFilePath = `${rootPath}/content/output.mov`;
+      const destinationFilePath = `${rootPath}/content/output.mp4`;
 
       console.log('> [video-robot] Starting After Effects');
 
@@ -171,6 +175,7 @@ async function robot() {
       const templateFilePath = `${rootPath}/templates/2/template.mlt`;
 
       console.log('> [video-robot] Starting Kdenlive');
+      console.log('> [video-robot] Rendering video')
 
       const melt = spawn(meltFilePath, [
         templateFilePath])
