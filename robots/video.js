@@ -9,6 +9,7 @@ async function robot() {
   const content = state.load();
 
   await convertAllImages(content);  
+  await createTitleImage(content);
   await createAllSentenceImages(content);
   await createYouTubeThumbnail();
 
@@ -60,6 +61,28 @@ async function robot() {
           }
 
           console.log(`> [video-robot] Image converted: ${outputFile}`);
+          resolve();
+        })
+    })
+  }
+
+  async function createTitleImage(content) {
+    return new Promise((resolve, reject) => {
+      const outputFile = `./content/title.png`
+
+      gm()
+        .out('-size', '1920x1080')
+        .out('-gravity', 'center')
+        .out('-background', 'transparent')
+        .out('-fill', 'white')
+        .out('-kerning', '-1')
+        .out(`caption:${content.searchTerm}`)
+        .write(outputFile, (error) => {
+          if (error) {
+            return reject(error);
+          }
+
+          console.log(`> [video-robot] Title created: ${outputFile}`);
           resolve();
         })
     })
@@ -172,17 +195,15 @@ async function robot() {
   async function renderVideoWithKdenlive() {
     return new Promise((resolve, reject) => {
       const meltFilePath = 'C:/Users/Administrador/AppData/Local/kdenlive/bin/melt.exe';
-      const templateFilePath = `${rootPath}/templates/2/template.mlt`;
+      const templateFilePath = `${rootPath}/templates/2/template.mlt`;      
 
       console.log('> [video-robot] Starting Kdenlive');
-      console.log('> [video-robot] Rendering video')
-
+      
       const melt = spawn(meltFilePath, [
-        templateFilePath])
-
-      melt.stdout.on('data', (data) => {
-        process.stdout.write(data)
-      })
+        templateFilePath
+      ])
+      
+      console.log('> [video-robot] Rendering video')
 
       melt.on('close', () => {
         console.log('> [video-robot] Kdenlive closed')
